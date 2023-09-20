@@ -4,6 +4,7 @@ import { useState } from 'react';
 import List from '@mui/material/List';
 import Box from '@mui/material/Box';
 import TodoItem from './TodoItem';
+import TodoForm from './TodoForm';
 
 const initialTodos = [
   { id: uuid(), text: 'walk the dog', completed: false },
@@ -12,6 +13,12 @@ const initialTodos = [
 ];
 export default function TodoList() {
   const [todos, setTodos] = useState(initialTodos);
+
+  const addTodo = (text) => {
+    setTodos((prev) => {
+      return [...prev, { text: text, id: uuid(), completed: false }];
+    });
+  };
 
   const removeTodo = (id) => {
     setTodos((prev) => {
@@ -46,6 +53,7 @@ export default function TodoList() {
           );
         })}
       </List>
+      <TodoForm addTodo={addTodo} />
     </Box>
   );
 }
