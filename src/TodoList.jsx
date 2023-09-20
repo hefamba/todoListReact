@@ -2,16 +2,8 @@ import React from 'react';
 import { v4 as uuid } from 'uuid';
 import { useState } from 'react';
 import List from '@mui/material/List';
-import {
-  Checkbox,
-  IconButton,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-} from '@mui/material';
 import Box from '@mui/material/Box';
-import CommentIcon from '@mui/icons-material/Comment';
+import TodoItem from './TodoItem';
 
 const initialTodos = [
   { id: uuid(), text: 'walk the dog', completed: false },
@@ -20,34 +12,37 @@ const initialTodos = [
 ];
 export default function TodoList() {
   const [todos, setTodos] = useState(initialTodos);
+
+  const removeTodo = (id) => {
+    setTodos((prev) => {
+      return prev.filter((i) => i.id !== id);
+    });
+  };
+
+  const toggleTodo = (id) => {
+    console.log('toggling');
+    setTodos((prev) => {
+      return prev.map((todo) => {
+        if (todo.id === id) {
+          return { ...todo, completed: !todo.completed };
+        } else {
+          return todo;
+        }
+      });
+    });
+  };
   return (
     <Box>
       <h1>Todos!</h1>
       <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
         {todos.map((todo) => {
-          const labelId = `checkbox-list-label-${todo.id}`;
           return (
-            <ListItem
+            <TodoItem
+              todo={todo}
               key={todo.id}
-              secondaryAction={
-                <IconButton edge="end" aria-label="comments">
-                  <CommentIcon />
-                </IconButton>
-              }
-              disablePadding>
-              <ListItemButton role={undefined} dense>
-                <ListItemIcon>
-                  <Checkbox
-                    edge="start"
-                    checked={todo.completed}
-                    tabIndex={-1}
-                    disableRipple
-                    inputProps={{ 'aria-labelledby': labelId }}
-                  />
-                </ListItemIcon>
-                <ListItemText id={labelId} primary={todo.text} />
-              </ListItemButton>
-            </ListItem>
+              remove={removeTodo}
+              toggle={toggleTodo}
+            />
           );
         })}
       </List>
