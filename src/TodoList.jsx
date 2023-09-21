@@ -1,18 +1,25 @@
 import React from 'react';
 import { v4 as uuid } from 'uuid';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import List from '@mui/material/List';
 import Box from '@mui/material/Box';
 import TodoItem from './TodoItem';
 import TodoForm from './TodoForm';
 
-const initialTodos = [
-  { id: uuid(), text: 'walk the dog', completed: false },
-  { id: uuid(), text: 'walk the dog', completed: true },
-  { id: uuid(), text: 'walk the dog', completed: false },
-];
+const getInitialData = () => {
+  const data = JSON.parse(localStorage.getItem('todos'));
+  if (!data) {
+    return [];
+  } else {
+    return data;
+  }
+};
 export default function TodoList() {
-  const [todos, setTodos] = useState(initialTodos);
+  const [todos, setTodos] = useState(getInitialData);
+
+  useEffect(() => {
+    localStorage.setItem('todos', JSON.stringify(todos));
+  }, [todos]);
 
   const addTodo = (text) => {
     setTodos((prev) => {
